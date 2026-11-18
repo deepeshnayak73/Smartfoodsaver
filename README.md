@@ -19,6 +19,13 @@ pip install -r requirements.txt
 
 Copy `.env.example` to `.env` and set `GEMINI_API_KEY` to your own key. Keep `.env` private; it is excluded from Git.
 
+For Streamlit Community Cloud, open the app's settings, select **Secrets**, and add:
+
+```toml
+GEMINI_API_KEY = "your_gemini_api_key"
+GEMINI_MODEL = "gemini-4-hydrogen"
+```
+
 ## Run
 
 ```powershell

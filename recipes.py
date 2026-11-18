@@ -5,6 +5,9 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+import streamlit as st
+from streamlit.errors import StreamlitSecretNotFoundError
+
 FALLBACK_MODELS = ["gemini-3.8-flash"]
 
 
@@ -16,6 +19,16 @@ def _load_env():
             if line and not line.startswith("#") and "=" in line:
                 k, v = line.split("=", 1)
                 os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
+def _get_setting(name, default=None):
+    value = os.environ.get(name)
+    if value is not None:
+        return value
+    try:
+        return st.secrets.get(name, default)
+    except StreamlitSecretNotFoundError:
+        return default
 
 
 def _call(model, key, prompt):
@@ -36,10 +49,12 @@ def _call(model, key, prompt):
 
 def ask_gemini(prompt):
     _load_env()
-    key = os.environ.get("GEMINI_API_KEY")
+    key = _get_setting("GEMINI_API_KEY")
     if not key:
-        raise RuntimeError("GEMINI_API_KEY is missing in .env")
-    primary = os.environ.get("GEMINI_MODEL", "gemini-4-hydrogen")
+        raise RuntimeError(
+            "GEMINI_API_KEY is missing. Set it in .env locally or in Streamlit Cloud secrets."
+        )
+    primary = _get_setting("GEMINI_MODEL", "gemini-4-hydrogen")
     last_error = ""
     for model in [primary] + FALLBACK_MODELS:
         for attempt in range(3):
