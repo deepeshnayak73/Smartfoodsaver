@@ -8,7 +8,7 @@ from pathlib import Path
 import streamlit as st
 from streamlit.errors import StreamlitSecretNotFoundError
 
-FALLBACK_MODELS = ["gemini-3.8-flash"]
+FALLBACK_MODELS = ["gemini-3.6-flash"]
 
 
 def _load_env():
@@ -56,7 +56,8 @@ def ask_gemini(prompt):
         )
     primary = _get_setting("GEMINI_MODEL", "gemini-4-hydrogen")
     last_error = ""
-    for model in [primary] + FALLBACK_MODELS:
+    models = dict.fromkeys([primary] + FALLBACK_MODELS)
+    for model in models:
         for attempt in range(3):
             try:
                 return _call(model, key, prompt)
