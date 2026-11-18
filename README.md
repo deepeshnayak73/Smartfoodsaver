@@ -25,4 +25,4 @@ Copy `.env.example` to `.env` and set `GEMINI_API_KEY` to your own key. Keep `.e
 streamlit run app.py
 ```
 
-The SQLite database is created locally as `food_saver.db` when the app starts. It is not included in Git.
+The SQLite database is created locally as `food_saver.db` when the app starts. It is not included in Git. On Streamlit Community Cloud, it is stored in `/tmp` because the app source directory may not be writable. Cloud storage is temporary, so data may be lost when the app restarts. Set `FOOD_SAVER_DB_PATH` to use a different writable SQLite path.

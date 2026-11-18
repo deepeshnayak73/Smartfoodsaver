@@ -1,8 +1,19 @@
-﻿from datetime import date
-from sqlalchemy import String, create_engine
+import os
+import tempfile
+from datetime import date
+from pathlib import Path
+from sqlalchemy import String, URL, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
-engine = create_engine("sqlite:///food_saver.db")
+app_dir = Path(__file__).resolve().parent
+if Path("/mount/src").is_dir():
+    default_db_path = Path(tempfile.gettempdir()) / "food_saver.db"
+else:
+    default_db_path = app_dir / "food_saver.db"
+
+db_path = Path(os.environ.get("FOOD_SAVER_DB_PATH", default_db_path)).expanduser()
+db_path.parent.mkdir(parents=True, exist_ok=True)
+engine = create_engine(URL.create("sqlite", database=str(db_path)))
 SessionLocal = sessionmaker(bind=engine)
 
 class Base(DeclarativeBase):
