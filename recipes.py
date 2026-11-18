@@ -8,7 +8,7 @@ from pathlib import Path
 import streamlit as st
 from streamlit.errors import StreamlitSecretNotFoundError
 
-FALLBACK_MODELS = ["gemini-3.6-flash"]
+FALLBACK_MODELS = ["gemini-3.6-flash", "gemini-3.5-flash-lite"]
 
 
 def _load_env():
